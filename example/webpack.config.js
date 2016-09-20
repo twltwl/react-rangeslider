@@ -4,17 +4,20 @@ var path = require('path')
 var webpack = require('webpack')
 var ExtractPlugin = require('extract-text-webpack-plugin')
 var HtmlPlugin = require('html-webpack-plugin')
+var __DEV__ = process.env.NODE_ENV === 'development'
 var config = {
   devtool: '#cheap-eval-source-map',
 
-  entry: process.env.NODE_ENV === 'development' ? [
-    'webpack-hot-middleware/client?http://localhost:3000',
-    path.join(__dirname, 'index')
-  ] : path.join(__dirname, 'index'),
+  entry: __DEV__ ? [
+    'react-hot-loader/patch',
+    'webpack-dev-server/client?http://localhost:3000',
+    'webpack/hot/only-dev-server',
+    path.resolve(__dirname, 'index')
+  ] : path.resolve(__dirname, 'index'),
 
   output: {
-    path: process.env.NODE_ENV === 'development' ? __dirname : 'deploy',
-    publicPath: process.env.NODE_ENV === 'development' ? '/static/' : '',
+    path: __DEV__ ? __dirname : 'deploy',
+    publicPath: __DEV__ ? '/static/' : '',
     filename: 'bundle.js'
   },
 
@@ -30,6 +33,10 @@ var config = {
       {
         test: /\.js?$/,
         exclude: /node_modules/,
+        include: [
+          path.resolve(__dirname),
+          path.resolve(__dirname, '../src')
+        ],
         loader: 'babel'
       }
     ]
@@ -40,29 +47,26 @@ var config = {
     'react-dom': 'ReactDOM'
   },
 
-  plugins: []
+  plugins: [
+    new webpack.DefinePlugin({
+      'process.env': {
+        'NODE_ENV': JSON.stringify(process.env.NODE_ENV)
+      }
+    })
+  ]
 }
 
-// Dev config
-if (process.env.NODE_ENV === 'development') {
+if (__DEV__) {
   config.module.loaders.push({
     test: /\.less$/,
     exclude: /node_modules/,
     loader: 'style!css!less'
   })
   config.plugins.push(
-    new webpack.DefinePlugin({
-      'process.env': {
-        'NODE_ENV': JSON.stringify('development')
-      }
-    }),
-    new webpack.NoErrorsPlugin(),
-    new webpack.HotModuleReplacementPlugin()
+    new webpack.HotModuleReplacementPlugin(),
+    new webpack.NoErrorsPlugin()
   )
-}
-
-// Build config
-if (process.env.NODE_ENV === 'production') {
+} else {
   config.module.loaders.push([
     {
       test: /\.less$/,
@@ -71,11 +75,6 @@ if (process.env.NODE_ENV === 'production') {
     }
   ])
   config.plugins.push(
-    new webpack.DefinePlugin({
-      'process.env': {
-        'NODE_ENV': JSON.stringify('production')
-      }
-    }),
     new webpack.optimize.UglifyJsPlugin({
       minimize: true,
       compress: {
@@ -89,7 +88,7 @@ if (process.env.NODE_ENV === 'production') {
     new HtmlPlugin({
       appMountId: 'mount',
       title: 'React RangeSlider',
-      template: 'example/index.ejs'
+      template: 'example/template/app.ejs'
     })
   )
 }

@@ -1,27 +1,23 @@
-const path = require('path')
-const webpack = require('webpack')
-const webpackDevMiddleware = require('webpack-dev-middleware')
-const webpackHotMiddleware = require('webpack-hot-middleware')
-const config = require('./webpack.config')
+import webpack from 'webpack'
+import WebpackServer from 'webpack-dev-server'
+import config from './webpack.config'
 
-const app = new (require('express'))()
+const host = 'localhost'
 const port = 3000
-
-const compiler = webpack(config)
-app.use(webpackDevMiddleware(compiler, {
-  noInfo: true,
-  publicPath: config.output.publicPath
-}))
-app.use(webpackHotMiddleware(compiler))
-
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'app.html'))
+const server = new WebpackServer(webpack(config), {
+  hot: true,
+  inline: false,
+  publicPath: config.output.publicPath,
+  contentBase: './example',
+  historyApiFallback: true,
+  stats: {
+    colors: true
+  }
 })
 
-app.listen(port, (err) => {
+server.listen(port, host, (err) => {
   if (err) {
-    console.log(err)
-  } else {
-    console.log(`Listening on ${port}`)
+    console.log(err.message)
   }
+  console.log(`Listening on http://${host}:${port}`)
 })

@@ -1,18 +1,4 @@
-import React from 'react'
-import Horizontal from './horizontal'
-import Negative from './negative'
-import Float from './float'
-import Vertical from './vertical'
-
-function Sliders () {
-  return (
-    <section id='examples'>
-      <Horizontal />
-      <Negative />
-      <Float />
-      <Vertical />
-    </section>
-  )
-}
-
-export default Sliders
+export { default as Horizontal } from './horizontal'
+export { default as Negative } from './negative'
+export { default as Float } from './float'
+export { default as Vertical } from './vertical'
