@@ -1,5 +1,6 @@
 # Directories to be ignored
 .DS_Store
+*.lock
 npm-debug.log
 node_modules
 deploy

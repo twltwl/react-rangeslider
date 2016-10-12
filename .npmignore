@@ -4,6 +4,7 @@
 .eslintrc
 .gitignore
 .travis.yml
+*.lock
 webpack.config.js
 
 example
