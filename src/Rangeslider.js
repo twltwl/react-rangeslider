@@ -29,7 +29,9 @@ class Slider extends Component {
     step: PropTypes.number,
     value: PropTypes.number,
     orientation: PropTypes.string,
+    onStart: PropTypes.func,
     onChange: PropTypes.func,
+    onEnd: PropTypes.func,
     className: PropTypes.string
   }
 
@@ -90,6 +92,10 @@ class Slider extends Component {
   handleStart = () => {
     document.addEventListener('mousemove', this.handleDrag)
     document.addEventListener('mouseup', this.handleEnd)
+
+    if (this.props.onStart) {
+      this.props.onStart()
+    }
   }
 
   /**
@@ -113,6 +119,10 @@ class Slider extends Component {
   handleEnd = () => {
     document.removeEventListener('mousemove', this.handleDrag)
     document.removeEventListener('mouseup', this.handleEnd)
+
+    if (this.props.onEnd) {
+      this.props.onEnd()
+    }
   }
 
   /**
