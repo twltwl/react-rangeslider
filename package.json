@@ -2,7 +2,7 @@
   "name": "react-rangeslider",
   "version": "1.0.9",
   "description": "A lightweight react component that acts as a HTML5 input range slider polyfill",
-  "main": "lib/index",
+  "main": "src/index",
   "scripts": {
     "clean:lib": "rimraf ./lib",
     "clean:deploy": "rimraf ./deploy",
