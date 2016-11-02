@@ -90,12 +90,12 @@ class Slider extends Component {
    * @return {void}
    */
   handleStart = () => {
-    document.addEventListener('mousemove', this.handleDrag)
-    document.addEventListener('mouseup', this.handleEnd)
-
     if (this.props.onStart) {
       this.props.onStart()
     }
+
+    document.addEventListener('mousemove', this.handleDrag)
+    document.addEventListener('mouseup', this.handleEnd)
   }
 
   /**
